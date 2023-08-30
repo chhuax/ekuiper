@@ -1,0 +1,116 @@
+{
+	"about": {
+		"trial": true,
+		"author": {
+			"name": "fulw",
+			"email": "fuliw@yonyou.com",
+			"company": "",
+			"website": ""
+		},
+		"helpUrl": {
+          "en_US": "https://ekuiper.org/docs/en/latest/guide/sinks/plugin/influx2.html",
+          "zh_CN": "https://ekuiper.org/docs/zh/latest/guide/sinks/plugin/influx2.html"
+        },
+		"description": {
+			"en_US": "This a sink plugin for iotdb, it can be used for saving the analysis data into iotdb .",
+			"zh_CN": "本插件为 iotdb 的持久化插件，可以用于将分析数据存入 iotdb 中"
+		}
+	},
+	"libs": [
+	  "github.com/apache/iotdb-client-go@v1.1.7"
+	],
+	"properties": [{
+		"name": "addr",
+		"default": "http://192.168.100.245:6667",
+		"optional": false,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The addr of the iotdb",
+			"zh_CN": "Iotdb的地址"
+		},
+		"label": {
+			"en_US": "Addr",
+			"zh_CN": "地址"
+		}
+	}, {
+		"name": "deviceId",
+		"default": "test",
+		"optional": true,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The device of the Iotdb",
+			"zh_CN": "Iotdb的设备"
+		},
+		"label": {
+			"en_US": "DeviceId",
+			"zh_CN": "设备"
+		}
+	}, {
+		"name": "measurements",
+		"default": "test",
+		"optional": true,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The measurements of the Iotdb",
+			"zh_CN": "Iotdb的设备"
+		},
+		"label": {
+			"en_US": "measurements",
+			"zh_CN": "物理量列表,逗号分隔"
+		}
+	
+	}, {
+		"name": "dataTypes",
+		"default": "test",
+		"optional": true,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The dataTypes of the Iotdb",
+			"zh_CN": "Iotdb的设备"
+		},
+		"label": {
+			"en_US": "dataTypes",
+			"zh_CN": "物理量数据类型列表, (0)BOOLEAN, (1)INT32, (2)INT64, (3)FLOAT,(4)DOUBLE,(5)TEXT"
+		}
+	}, {
+		"name": "root",
+		"default": "",
+		"optional": false,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The user of the iotdb",
+			"zh_CN": "Iotdb登陆用户"
+		},
+		"label": {
+			"en_US": "login user",
+			"zh_CN": "login user"
+		}
+	}, {
+		"name": "root",
+		"default": "",
+		"optional": false,
+		"control": "text",
+		"type": "string",
+		"hint": {
+			"en_US": "The Iotdb password",
+			"zh_CN": "Iotdb password"
+		},
+		"label": {
+			"en_US": "passwd",
+			"zh_CN": "密码"
+		}
+	}],
+	"node": {
+		"category": "sink",
+		"icon": "iconPath",
+		"label": {
+			"en": "iotdb",
+			"zh": "iotdb"
+		}
+	}
+}
