@@ -93,16 +93,14 @@ func TestTempalte(t *testing.T) {
 func initIotdbSink() (sink *iotdbSink) {
 
 	sink = &iotdbSink{
-		addr:     "localhost",
-		port:     "6667",
+		nodeUrls: "localhost:6667",
 		deviceId: "root.ln.test.{{.name}}",
 		user:     "root",
 		passwd:   "root",
 	}
 
 	sink.Configure(map[string]interface{}{
-		"addr":     "localhost",
-		"port":     "6667",
+		"nodeUrls": "localhost:6667",
 		"deviceId": "root.ln.test.{{.name}}",
 		"user":     "root",
 		"passwd":   "root",

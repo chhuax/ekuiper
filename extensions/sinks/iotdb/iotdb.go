@@ -29,14 +29,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/apache/iotdb-client-go/client"
 	"github.com/lf-edge/ekuiper/pkg/api"
 )
 
 type iotdbSink struct {
-	addr         string
-	port         string
+	nodeUrls     string
 	user         string
 	passwd       string
 	deviceId     string
@@ -46,14 +46,9 @@ type iotdbSink struct {
 }
 
 func (m *iotdbSink) Configure(props map[string]interface{}) error {
-	if i, ok := props["addr"]; ok {
+	if i, ok := props["nodeUrls"]; ok {
 		if i, ok := i.(string); ok {
-			m.addr = i
-		}
-	}
-	if i, ok := props["port"]; ok {
-		if i, ok := i.(string); ok {
-			m.port = i
+			m.nodeUrls = i
 		}
 	}
 	if i, ok := props["user"]; ok {
@@ -90,8 +85,7 @@ func (m *iotdbSink) Open(ctx api.StreamContext) (err error) {
 	logger.Debugln("Opening iotdb Sink")
 
 	config := &client.PoolConfig{
-		Host:     m.addr,
-		Port:     m.port,
+		NodeUrls: strings.Split(m.nodeUrls, ","),
 		UserName: m.user,
 		Password: m.passwd,
 	}
