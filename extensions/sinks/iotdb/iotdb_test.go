@@ -84,7 +84,7 @@ func TestTempalte(t *testing.T) {
 		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
 	}
 
-	deviceId, _ := ctx.ParseTemplate("hello, {{.name}}", data[0])
+	deviceId, _ := ctx.ParseTemplate("hello, {{if gt .age 40}}{{.name}}{{else}}{{.mobile}}{{end}}", data[0])
 
 	assert.Equal(t, "hello, John", deviceId)
 
