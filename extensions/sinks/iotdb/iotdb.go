@@ -102,13 +102,23 @@ func (m *iotdbSink) Open(ctx api.StreamContext) (err error) {
 func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 	logger := ctx.GetLogger()
 	logger.Infof("start collect data")
-	session, err := m.sessionPool.GetSession()
-	if err != nil {
-		logger.Errorf("session pool get session error!")
-		return err
+
+	switch t := data.(type) {
+	case map[string]interface{}:
+
+		m.insertIotdb(ctx, data)
+	case []map[string]interface{}:
+		for _, k := range t {
+			m.insertIotdb(ctx, k)
+		}
 	}
 
-	jsonBytes, _ := json.Marshal(&data)
+	return nil
+}
+
+func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err error) {
+	logger := ctx.GetLogger()
+	jsonBytes, err := json.Marshal(&data)
 	if err != nil {
 		return err
 	}
@@ -117,6 +127,12 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 	err = json.Unmarshal(jsonBytes, &d)
 	if err != nil {
 		return fmt.Errorf("fail to decode data %s after applying dataTemplate for error %v", string(jsonBytes), err)
+	}
+
+	session, err := m.sessionPool.GetSession()
+	if err != nil {
+		logger.Errorf("session pool get session error!")
+		return err
 	}
 	keys := make([]string, 0, len(d)-1)
 	values := make([]interface{}, 0, len(d)-1)
@@ -137,6 +153,11 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 		measurements = keys
 		dataTypes    = types
 	)
+	deviceId, err = ctx.ParseTemplate(m.deviceId, d)
+	if err != nil {
+		logger.Errorf("parse template for table %s error: %v", m.deviceId, err)
+		return err
+	}
 	defer m.sessionPool.PutBack(session)
 	if err == nil {
 		_, err := session.InsertRecord(deviceId, measurements, dataTypes, values, timestamp)
@@ -144,7 +165,7 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 			logger.Errorf("session insertRecord err %v", err)
 		}
 	}
-	return nil
+	return err
 }
 
 func transformType(value interface{}) (dt client.TSDataType) {

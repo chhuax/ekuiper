@@ -19,26 +19,13 @@ import (
 
 	econf "github.com/lf-edge/ekuiper/internal/conf"
 	"github.com/lf-edge/ekuiper/internal/topo/context"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestIotdb(t *testing.T) {
+func TestIotdbSinkSingle(t *testing.T) {
 	contextLogger := econf.Log.WithField("rule", "test")
 	ctx := context.WithValue(context.Background(), context.LoggerKey, contextLogger)
-	sink := &iotdbSink{
-		addr:     "localhost",
-		port:     "6667",
-		deviceId: "root.ln.test",
-		user:     "root",
-		passwd:   "root",
-	}
-
-	sink.Configure(map[string]interface{}{
-		"addr":     "localhost",
-		"port":     "6667",
-		"deviceId": "root.ln.test",
-		"user":     "root",
-		"passwd":   "root",
-	})
+	sink := initIotdbSink()
 	err := sink.Open(ctx)
 	if err != nil {
 		t.Error(err)
@@ -58,4 +45,67 @@ func TestIotdb(t *testing.T) {
 		}
 	}
 	sink.Close(ctx)
+}
+
+func TestIotdbSinkMultiple(t *testing.T) {
+	contextLogger := econf.Log.WithField("rule", "test")
+	ctx := context.WithValue(context.Background(), context.LoggerKey, contextLogger)
+	sink := initIotdbSink()
+	err := sink.Open(ctx)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	data := []map[string]interface{}{
+		{"timestamp": 1, "name": "John", "age": 43, "mobile": "334433"},
+		{"timestamp": 2, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+	}
+
+	err = sink.Collect(ctx, data)
+	if err != nil {
+		t.Error(err)
+	}
+	sink.Close(ctx)
+}
+
+func TestTempalte(t *testing.T) {
+	contextLogger := econf.Log.WithField("rule", "test")
+	ctx := context.WithValue(context.Background(), context.LoggerKey, contextLogger)
+	sink := initIotdbSink()
+	err := sink.Open(ctx)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	data := []map[string]interface{}{
+		{"timestamp": 1, "name": "John", "age": 43, "mobile": "334433"},
+		{"timestamp": 2, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+	}
+
+	deviceId, _ := ctx.ParseTemplate("hello, {{.name}}", data[0])
+
+	assert.Equal(t, "hello, John", deviceId)
+
+}
+
+func initIotdbSink() (sink *iotdbSink) {
+
+	sink = &iotdbSink{
+		addr:     "localhost",
+		port:     "6667",
+		deviceId: "root.ln.test.{{.name}}",
+		user:     "root",
+		passwd:   "root",
+	}
+
+	sink.Configure(map[string]interface{}{
+		"addr":     "localhost",
+		"port":     "6667",
+		"deviceId": "root.ln.test.{{.name}}",
+		"user":     "root",
+		"passwd":   "root",
+	})
+	return sink
 }
