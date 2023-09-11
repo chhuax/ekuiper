@@ -145,7 +145,7 @@ func (ms *MQTTClient) Subscribe(topic string, qos byte, handler MQTT.MessageHand
 }
 
 func (ms *MQTTClient) Publish(topic string, qos byte, retained bool, message []byte) error {
-	if token := ms.conn.Publish(topic, qos, retained, message); token.WaitTimeout(5*time.Second) && token.Error() != nil {
+	if token := ms.conn.Publish(topic, qos, retained, message); !token.WaitTimeout(5*time.Second) || token.Error() != nil {
 		return fmt.Errorf("%s: %s", errorx.IOErr, token.Error())
 	}
 	return nil

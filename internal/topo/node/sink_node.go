@@ -224,7 +224,8 @@ func (m *SinkNode) Open(ctx api.StreamContext, result chan<- error) {
 							} else {
 								select {
 								case dataCh <- outs:
-								case <-ctx.Done():
+								default:
+									stats.IncTotalExceptions("data channel full, drop data")
 								}
 							}
 							if resendCh != nil {

@@ -97,6 +97,7 @@ func (n *LookupNode) Exec(ctx api.StreamContext, errCh chan<- error) {
 		return
 	}
 	n.statManager = stats
+	n.statManagers = append(n.statManagers, stats)
 	go func() {
 		err := infra.SafeRun(func() error {
 			ns, err := lookup.Attach(n.name)
