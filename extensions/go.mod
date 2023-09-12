@@ -9,7 +9,7 @@ require (
 	github.com/alexbrainman/odbc v0.0.0-20211220213544-9c9a2e61c5e2
 	github.com/amsokol/ignite-go-client v0.12.2
 	github.com/apache/calcite-avatica-go/v5 v5.2.0
-	github.com/apache/iotdb-client-go v1.1.7
+	github.com/apache/iotdb-client-go v1.1.1
 	github.com/bippio/go-impala v2.1.0+incompatible
 	github.com/btnguyen2k/gocosmos v0.1.9
 	github.com/couchbase/go_n1ql v0.0.0-20220303011133-0ed4bf93e31d
