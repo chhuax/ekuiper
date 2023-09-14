@@ -17,7 +17,7 @@
 		}
 	},
 	"libs": [
-	  "github.com/apache/iotdb-client-go@v1.1.7"
+	  "github.com/apache/iotdb-client-go@v1.1.1"
 	],
 	"properties": [{
 		"name": "addr",
@@ -46,35 +46,6 @@
 		"label": {
 			"en_US": "DeviceId",
 			"zh_CN": "设备"
-		}
-	}, {
-		"name": "measurements",
-		"default": "test",
-		"optional": true,
-		"control": "text",
-		"type": "string",
-		"hint": {
-			"en_US": "The measurements of the Iotdb",
-			"zh_CN": "Iotdb的设备"
-		},
-		"label": {
-			"en_US": "measurements",
-			"zh_CN": "物理量列表,逗号分隔"
-		}
-	
-	}, {
-		"name": "dataTypes",
-		"default": "test",
-		"optional": true,
-		"control": "text",
-		"type": "string",
-		"hint": {
-			"en_US": "The dataTypes of the Iotdb",
-			"zh_CN": "Iotdb的设备"
-		},
-		"label": {
-			"en_US": "dataTypes",
-			"zh_CN": "物理量数据类型列表, (0)BOOLEAN, (1)INT32, (2)INT64, (3)FLOAT,(4)DOUBLE,(5)TEXT"
 		}
 	}, {
 		"name": "root",

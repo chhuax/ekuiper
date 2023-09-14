@@ -32,9 +32,9 @@ func TestIotdbSinkSingle(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{"timestamp": 1, "name": "John", "age": 43, "mobile": "334433"},
-		{"timestamp": 2, "name": "Susan", "age": 34, "mobile": "334433"},
-		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 1, "name": "John", "age": 43, "mobile": "334433"},
+		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433"},
 	}
 
 	for _, d := range data {
@@ -57,9 +57,7 @@ func TestIotdbSinkMultiple(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{"timestamp": 1, "name": "John", "age": 43, "mobile": "334433"},
-		{"timestamp": 2, "name": "Susan", "age": 34, "mobile": "334433"},
-		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 1, "name": "John", "msg": "334433"},
 	}
 
 	err = sink.Collect(ctx, data)
@@ -79,9 +77,9 @@ func TestTempalte(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{"timestamp": 1, "name": "John", "age": 43, "mobile": "334433"},
-		{"timestamp": 2, "name": "Susan", "age": 34, "mobile": "334433"},
-		{"timestamp": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 1, "name": "John", "age": 43, "mobile": "334433"},
+		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433"},
 	}
 
 	deviceId, _ := ctx.ParseTemplate("hello, {{if gt .age 40}}{{.name}}{{else}}{{.mobile}}{{end}}", data[0])
@@ -93,18 +91,30 @@ func TestTempalte(t *testing.T) {
 
 func initIotdbSink() (sink *iotdbSink) {
 
-	sink = &iotdbSink{
-		nodeUrls: "localhost:6667",
-		deviceId: "root.ln.test.{{.name}}",
-		user:     "root",
-		passwd:   "root",
-	}
+	sink = &iotdbSink{}
 
 	sink.Configure(map[string]interface{}{
-		"nodeUrls": "localhost:6667",
-		"deviceId": "root.ln.test.{{.name}}",
+		"nodeUrls": "172.20.45.128:6668",
+		"deviceId": "root.ln.ekuiper.test",
 		"user":     "root",
 		"passwd":   "root",
 	})
 	return sink
+}
+
+func TestRegexTopic(t *testing.T) {
+	str := "root/ln/wf01/`abc.d`"
+	strExpect := "root.ln.wf01.`abc.d`"
+	newStr := revertTopic(str)
+	assert.Equal(t, newStr, strExpect)
+
+	str2 := "root/ln/wf01/`abc.d`/deviceId"
+	str2Expect := "root.ln.wf01.`abc.d`.deviceId"
+	newStr2 := revertTopic(str2)
+	assert.Equal(t, newStr2, str2Expect)
+
+	str3 := "root/ln/wf01/`abc.d`/deviceId/`dafd.w`"
+	str3Expect := "root.ln.wf01.`abc.d`.deviceId.`dafd.w`"
+	newStr3 := revertTopic(str3)
+	assert.Equal(t, newStr3, str3Expect)
 }

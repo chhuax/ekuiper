@@ -29,6 +29,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/apache/iotdb-client-go/client"
@@ -95,7 +96,7 @@ func (m *iotdbSink) Open(ctx api.StreamContext) (err error) {
 
 func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 	logger := ctx.GetLogger()
-	logger.Infof("start collect data")
+	logger.Infof("start collect data , %v", data)
 
 	switch t := data.(type) {
 	case map[string]interface{}:
@@ -112,6 +113,7 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 
 func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err error) {
 	logger := ctx.GetLogger()
+	logger.Infof("start insert iotdb , %v", data)
 	jsonBytes, err := json.Marshal(&data)
 	if err != nil {
 		return err
@@ -131,9 +133,9 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 	keys := make([]string, 0, len(d)-1)
 	values := make([]interface{}, 0, len(d)-1)
 	types := make([]client.TSDataType, 0, len(d)-1)
-	timestamp := int64(d["timestamp"].(float64))
+	time := int64(d["time"].(float64))
 	for k := range d {
-		if k == "timestamp" {
+		if k == "time" {
 			continue
 		}
 		keys = append(keys, k)
@@ -153,8 +155,11 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		return err
 	}
 	defer m.sessionPool.PutBack(session)
+	deviceId = revertTopic(deviceId)
 	if err == nil {
-		_, err := session.InsertRecord(deviceId, measurements, dataTypes, values, timestamp)
+		logger.Infof("start insert  data , deviceId : %v, measurements :%v, values: %v", deviceId, measurements, values)
+		r, err := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
+		logger.Infof("session insertRecord result :%v", r)
 		if err != nil {
 			logger.Errorf("session insertRecord err %v", err)
 		}
@@ -181,6 +186,23 @@ func transformType(value interface{}) (dt client.TSDataType) {
 		dt = client.UNKNOWN
 	}
 	return dt
+}
+
+func revertTopic(str string) string {
+	sampleRegex := regexp.MustCompile("/")
+	sampleRegex2 := regexp.MustCompile("`")
+	result := sampleRegex2.Split(str, -1)
+	flag := 0
+	if result[0] == "" {
+		flag = 1
+	}
+	for i := range result {
+		if i%2 == flag {
+			result[i] = sampleRegex.ReplaceAllString(result[i], ".")
+		}
+	}
+	newStr := strings.Join(result, "`")
+	return newStr
 }
 
 func (m *iotdbSink) Close(ctx api.StreamContext) error {
