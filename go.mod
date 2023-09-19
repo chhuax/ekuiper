@@ -52,7 +52,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
-	github.com/apache/iotdb-client-go v1.1.7 // indirect
+	github.com/apache/iotdb-client-go v1.1.1 // indirect
 	github.com/apache/thrift v0.15.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.3.0 // indirect
