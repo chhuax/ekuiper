@@ -32,9 +32,9 @@ func TestIotdbSinkSingle(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{"time": 1, "name": "John", "age": 43, "mobile": "334433"},
-		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433"},
-		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433"},
+		{"time": 1, "name": "John", "age": 43, "mobile": "334433", "meta": "adfad.afdafds1"},
+		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds2"},
+		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds3"},
 	}
 
 	for _, d := range data {
