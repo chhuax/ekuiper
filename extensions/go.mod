@@ -244,6 +244,6 @@ require (
 	modernc.org/zappy v1.0.6 // indirect
 )
 
-require git.yonyou.com/tsdb/tsdb-client-go v1.2.0
+require git.yonyou.com/tsdb/tsdb-client-go v1.1.3
 
 require github.com/Microsoft/go-winio v0.6.0 // indirect

@@ -11,8 +11,8 @@ cloud.google.com/go/longrunning v0.4.1 h1:v+yFJOfKC3yZdY6ZUI933pIYdhyhV8S3NpWrXW
 cloud.google.com/go/longrunning v0.4.1/go.mod h1:4iWDqhBZ70CvZ6BfETbvam3T8FMvLK+eFj0E6AaRQTo=
 cloud.google.com/go/spanner v1.44.0 h1:fba7k2apz4aI0BE59/kbeaJ78dPOXSz2PSuBIfe7SBM=
 cloud.google.com/go/spanner v1.44.0/go.mod h1:G8XIgYdOK+Fbcpbs7p2fiprDw4CaZX63whnSMLVBxjk=
-git.yonyou.com/tsdb/tsdb-client-go v1.2.0 h1:NIvypQlf56JlxZTVhBqX1VEH6GiGyDS1d9SQ1GnyA7E=
-git.yonyou.com/tsdb/tsdb-client-go v1.2.0/go.mod h1:7Vo7DIKXJcB55s/MwEYVupSDt8nDZFVqf/tu/niq9aQ=
+git.yonyou.com/tsdb/tsdb-client-go v1.1.3 h1:N3Ofa3OQRI/31D07WQw1mPzZuOd1j7t4pHIhTWY+G3g=
+git.yonyou.com/tsdb/tsdb-client-go v1.1.3/go.mod h1:ApeNTuiuqTz5yxXmi8HDHxn0B3GyGVuEyutG7EdIp9U=
 github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 h1:/vQbFIOMbk2FiG/kXiLl8BRyzTWDw7gX/Hz7Dd5eDMs=
 github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4/go.mod h1:hN7oaIRCjzsZ2dE+yG5k+rsdt3qcwykqK6HVGcKwsw4=
 github.com/99designs/keyring v1.2.2 h1:pZd3neh/EmUzWONb35LxQfvuY7kiSXAq3HQd97+XBn0=
