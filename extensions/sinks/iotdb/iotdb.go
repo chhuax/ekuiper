@@ -34,7 +34,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apache/iotdb-client-go/client"
+	"git.yonyou.com/tsdb/tsdb-client-go/client"
 	"github.com/lf-edge/ekuiper/pkg/api"
 )
 

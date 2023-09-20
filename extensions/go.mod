@@ -9,7 +9,6 @@ require (
 	github.com/alexbrainman/odbc v0.0.0-20211220213544-9c9a2e61c5e2
 	github.com/amsokol/ignite-go-client v0.12.2
 	github.com/apache/calcite-avatica-go/v5 v5.2.0
-
 	github.com/bippio/go-impala v2.1.0+incompatible
 	github.com/btnguyen2k/gocosmos v0.1.9
 	github.com/couchbase/go_n1ql v0.0.0-20220303011133-0ed4bf93e31d
@@ -167,7 +166,6 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.3 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
-	github.com/lf-edge/ekuiper/sdk/go v0.0.0-20230825014329-61ae68252482
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
@@ -245,3 +243,7 @@ require (
 	modernc.org/token v1.1.0 // indirect
 	modernc.org/zappy v1.0.6 // indirect
 )
+
+require git.yonyou.com/tsdb/tsdb-client-go v1.2.0
+
+require github.com/Microsoft/go-winio v0.6.0 // indirect

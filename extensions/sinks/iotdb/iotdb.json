@@ -17,7 +17,7 @@
 		}
 	},
 	"libs": [
-	  "github.com/apache/iotdb-client-go@v1.1.1"
+	  "git.yonyou.com/tsdb/tsdb-client-go/client@v1.2.0"
 	],
 	"properties": [{
 		"name": "addr",
