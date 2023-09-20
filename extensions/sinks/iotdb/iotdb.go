@@ -183,7 +183,6 @@ func transformType(value interface{}) (dt client.TSDataType) {
 		dt = client.BOOLEAN
 	default:
 		fmt.Errorf("change to tsDataType UNKNOWN value : %v, type : %v", value, vt)
-		dt = client.UNKNOWN
 	}
 	return dt
 }
