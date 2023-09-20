@@ -159,7 +159,7 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		logger.Infof("start insert  data , deviceId : %v, time:%v, measurements :%v, values: %v, dataTypes :%v", deviceId, time, measurements, values, dataTypes)
 		logger.Infof("session :%v", session)
 		r, err := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
-		logger.Infof("result redirect node  :%v", r.RedirectNode)
+		logger.Infof("result :%v", r)
 		if err != nil {
 			logger.Errorf("session insertRecord err %v", err)
 		}
