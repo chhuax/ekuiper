@@ -105,12 +105,10 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err error) {
 	logger := ctx.GetLogger()
 	logger.Infof("start insert iotdb , %v", data)
-	logger.Infof("session config :%v", m)
 	jsonBytes, err := json.Marshal(&data)
 	if err != nil {
 		return err
 	}
-
 	d := make(map[string]interface{})
 	err = json.Unmarshal(jsonBytes, &d)
 	if err != nil {
@@ -141,25 +139,30 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		types = append(types, t)
 	}
 	var (
-		deviceId     = m.deviceId
 		measurements = keys
 		dataTypes    = types
 	)
 	if len(measurements) == 0 {
 		return errors.New("measurements must not be empty!")
 	}
-	deviceId, err = ctx.ParseTemplate(m.deviceId, d)
+	deviceId := m.deviceId
+	deviceId, err = ctx.ParseTemplate(deviceId, d)
 	if err != nil {
-		logger.Errorf("parse template for table %s error: %v", m.deviceId, err)
+		logger.Errorf("parse template for table %s error: %v", deviceId, err)
 		return err
 	}
-	defer m.sessionPool.PutBack(session)
 	deviceId = revertTopic(deviceId)
+
+	defer m.sessionPool.PutBack(session)
+
 	if err == nil {
 		logger.Infof("start insert  data , deviceId : %v, time:%v, measurements :%v, values: %v, dataTypes :%v", deviceId, time, measurements, values, dataTypes)
 		r, err := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
-		logger.Infof("result :%v", r)
+		if r.Code != client.SuccessStatus {
+			logger.Infof("result :%v", r)
+		}
 		if err != nil {
+
 			logger.Errorf("session insertRecord err %v", err)
 		}
 	}

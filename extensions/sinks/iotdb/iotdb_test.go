@@ -32,9 +32,9 @@ func TestIotdbSinkSingle(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{"time": 1, "name": "John", "age": 43, "mobile": "334433", "meta": "adfad.afdafds1"},
-		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds2"},
-		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds3"},
+		{"time": 1, "name": "John", "age": 43, "mobile": "334433", "meta": "adfad.afdafds1", "device": "root.ln.test.d1"},
+		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds2", "device": "root.ln.test.d1"},
+		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds3", "device": "root.ln.test.d1"},
 	}
 
 	for _, d := range data {
@@ -95,7 +95,7 @@ func initIotdbSink() (sink *iotdbSink) {
 
 	sink.Configure(map[string]interface{}{
 		"nodeUrls": "172.20.45.128:6668",
-		"deviceId": "root.ln.ekuiper.test",
+		"deviceId": "{{.device}}",
 		"user":     "root",
 		"passwd":   "root",
 	})
