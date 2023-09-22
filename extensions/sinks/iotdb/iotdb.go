@@ -114,7 +114,10 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 	if err != nil {
 		return fmt.Errorf("fail to decode data %s after applying dataTemplate for error %v", string(jsonBytes), err)
 	}
-
+	if len(d) == 0 {
+		logger.Warnf("data is empty %v", d)
+		return err
+	}
 	session, err := m.sessionPool.GetSession()
 	if err != nil {
 		logger.Errorf("session pool get session error!")
