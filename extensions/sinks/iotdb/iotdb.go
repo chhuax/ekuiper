@@ -160,6 +160,12 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		return err
 	}
 	deviceId = revertTopic(deviceId)
+	// 替换.property
+	index := strings.LastIndex(deviceId, ".property.metric")
+	if index != -1 {
+		deviceId = deviceId[:index] + ".metric"
+	}
+
 	if err == nil {
 		logger.Infof("start insert  data , deviceId : %v, time:%v, measurements :%v, values: %v, dataTypes :%v", deviceId, time, measurements, values, dataTypes)
 		r, err1 := session.InsertRecord(deviceId, measurements, dataTypes, values, time)

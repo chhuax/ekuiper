@@ -15,6 +15,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	econf "github.com/lf-edge/ekuiper/internal/conf"
@@ -32,8 +33,7 @@ func TestIotdbSinkSingle(t *testing.T) {
 		return
 	}
 	data := []map[string]interface{}{
-		{},
-		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds2", "device": "root.ln.test.d1"},
+		{"time": 2, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds2", "device": "root.ln.test.property"},
 		{"time": 3, "name": "Susan", "age": 34, "mobile": "334433", "meta": "adfad.afdafds3", "device": "root.ln.test.d1"},
 	}
 
@@ -117,4 +117,13 @@ func TestRegexTopic(t *testing.T) {
 	str3Expect := "root.ln.wf01.`abc.d`.deviceId.`dafd.w`"
 	newStr3 := revertTopic(str3)
 	assert.Equal(t, newStr3, str3Expect)
+}
+
+func TestReplaceLastStr(t *testing.T) {
+	deviceId := "root.ln.wf01.wd03.property.metric"
+	index := strings.LastIndex(deviceId, ".property.metric")
+	if index != -1 {
+		deviceId = deviceId[:index] + ".metric"
+	}
+	assert.Equal(t, deviceId, "root.ln.wf01.wd03.metric")
 }
