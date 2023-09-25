@@ -165,7 +165,6 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 			logger.Infof("result :%v", r)
 		}
 		if err != nil {
-
 			logger.Errorf("session insertRecord err %v", err)
 		}
 	}

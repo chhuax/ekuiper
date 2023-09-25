@@ -39,8 +39,20 @@ build_prepare:
 
 .PHONY: build_without_edgex
 build_without_edgex: build_prepare
+	GO111MODULE=on CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiper cmd/kuiper/main.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiperd cmd/kuiperd/main.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Iotdb@v1.0.0.so extensions/sinks/iotdb/iotdb.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Sql@v1.0.0.so extensions/sinks/sql/sql.go
+	@if [ "$$(uname -s)" = "Linux" ] && [ ! -z $$(which upx) ]; then upx ./kuiper; upx ./kuiperd; fi
+	@mv ./kuiper ./kuiperd $(BUILD_PATH)/$(PACKAGE_NAME)/bin
+	@echo "Build successfully"
+
+.PHONY: build_with_plugins_debug
+build_without_edgex: build_prepare
 	GO111MODULE=on CGO_ENABLED=0 go build -trimpath -gcflags='all=-N -l' -ldflags="-X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiper cmd/kuiper/main.go
 	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -gcflags='all=-N -l' -ldflags="-X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiperd cmd/kuiperd/main.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -gcflags='all=-N -l' --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Iotdb@v1.0.0.so extensions/sinks/iotdb/iotdb.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -gcflags='all=-N -l' --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Sql@v1.0.0.so extensions/sinks/sql/sql.go
 	@if [ "$$(uname -s)" = "Linux" ] && [ ! -z $$(which upx) ]; then upx ./kuiper; upx ./kuiperd; fi
 	@mv ./kuiper ./kuiperd $(BUILD_PATH)/$(PACKAGE_NAME)/bin
 	@echo "Build successfully"
@@ -61,6 +73,8 @@ build_with_edgex: build_prepare
 build_with_edgex_and_script: build_prepare
 	GO111MODULE=on CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X main.Version=$(VERSION) -X main.LoadFileType=relative" -tags "edgex include_nats_messaging" -o kuiper cmd/kuiper/main.go
 	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.Version=$(VERSION) -X main.LoadFileType=relative" -tags "edgex include_nats_messaging script" -o kuiperd cmd/kuiperd/main.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Iotdb@v1.0.0.so extensions/sinks/iotdb/iotdb.go
+	GO111MODULE=on CGO_ENABLED=1 go build -trimpath --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Sql@v1.0.0.so extensions/sinks/sql/sql.go
 	@if [ "$$(uname -s)" = "Linux" ] && [ ! -z $$(which upx) ]; then upx ./kuiper; upx ./kuiperd; fi
 	@mv ./kuiper ./kuiperd $(BUILD_PATH)/$(PACKAGE_NAME)/bin
 	@echo "Build successfully"
