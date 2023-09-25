@@ -90,17 +90,20 @@ func (m *iotdbSink) Collect(ctx api.StreamContext, data interface{}) error {
 	logger := ctx.GetLogger()
 	logger.Infof("start collect data , %v", data)
 
+	var err error
 	switch t := data.(type) {
 	case map[string]interface{}:
-
-		m.insertIotdb(ctx, data)
+		err = m.insertIotdb(ctx, data)
 	case []map[string]interface{}:
 		for _, k := range t {
-			m.insertIotdb(ctx, k)
+			err = m.insertIotdb(ctx, k)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
-	return nil
+	return err
 }
 
 func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err error) {
@@ -120,6 +123,7 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		return err
 	}
 	session, err := m.sessionPool.GetSession()
+	defer m.sessionPool.PutBack(session)
 	if err != nil {
 		logger.Errorf("session pool get session error!")
 		return err
@@ -156,9 +160,6 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 		return err
 	}
 	deviceId = revertTopic(deviceId)
-
-	defer m.sessionPool.PutBack(session)
-
 	if err == nil {
 		logger.Infof("start insert  data , deviceId : %v, time:%v, measurements :%v, values: %v, dataTypes :%v", deviceId, time, measurements, values, dataTypes)
 		r, err1 := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
