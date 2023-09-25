@@ -31,6 +31,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -160,12 +161,10 @@ func (m *iotdbSink) insertIotdb(ctx api.StreamContext, data interface{}) (err er
 
 	if err == nil {
 		logger.Infof("start insert  data , deviceId : %v, time:%v, measurements :%v, values: %v, dataTypes :%v", deviceId, time, measurements, values, dataTypes)
-		r, err := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
+		r, err1 := session.InsertRecord(deviceId, measurements, dataTypes, values, time)
 		if r.Code != client.SuccessStatus {
-			logger.Infof("result :%v", r)
-		}
-		if err != nil {
-			logger.Errorf("session insertRecord err %v", err)
+			logger.Infof("result :%v, err1 : %v", r, err1)
+			err = errors.New("insert iotdb error r.Code : " + strconv.Itoa(int(r.Code)))
 		}
 	}
 	return err
