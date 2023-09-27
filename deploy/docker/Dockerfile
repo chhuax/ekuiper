@@ -19,7 +19,9 @@ COPY . /go/kuiper
 
 WORKDIR /go/kuiper
 
-RUN make build_with_edgex
+ENV GOPROXY="https://user:token@repo.yyrd.com/artifactory/api/go/yonyou-golang" \
+    GONOSUMDB="git.yonyou.com"
+RUN make build_with_edgex_and_script
 
 FROM alpine:3.16
 
