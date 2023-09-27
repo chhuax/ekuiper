@@ -48,7 +48,7 @@ build_without_edgex: build_prepare
 	@echo "Build successfully"
 
 .PHONY: build_with_plugins_debug
-build_without_edgex: build_prepare
+build_with_plugins_debug: build_prepare
 	GO111MODULE=on CGO_ENABLED=0 go build -trimpath -gcflags='all=-N -l' -ldflags="-X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiper cmd/kuiper/main.go
 	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -gcflags='all=-N -l' -ldflags="-X main.Version=$(VERSION) -X main.LoadFileType=relative" -o kuiperd cmd/kuiperd/main.go
 	GO111MODULE=on CGO_ENABLED=1 go build -trimpath -gcflags='all=-N -l' --buildmode=plugin -o $(BUILD_PATH)/$(PACKAGE_NAME)/plugins/sinks/Iotdb@v1.0.0.so extensions/sinks/iotdb/iotdb.go
